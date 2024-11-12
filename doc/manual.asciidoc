@@ -265,6 +265,11 @@ output files are out of date.
 rebuild those targets.
 _Available since Ninja 1.11._
 
+`multi-inputs`:: given a list of targets, print a list of all inputs used
+to rebuild those targets. Each line will constst of a target, a field separator
+and a file path. The list produced by the tool can be helpful if one
+would like to know which targets that are affected by a certain file.
+
 `clean`:: remove built files. By default, it removes all built files
 except for those created by the generator.  Adding the `-g` flag also
 removes built files created by the generator (see <<ref_rule,the rule

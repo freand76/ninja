@@ -371,6 +371,39 @@ out 2
         )
 
 
+    def test_tool_multi_inputs(self) -> None:
+        plan = '''
+rule cat
+  command = cat $in $out
+build out1 : cat in1
+build out2 : cat in1 in2
+build out3 : cat in1 in2 in3
+'''
+        self.assertEqual(run(plan, flags='-t multi-inputs out1'),
+'''out1	in1
+''')
+
+        self.assertEqual(run(plan, flags='-t multi-inputs out1 out2 out3'),
+'''out1	in1
+out2	in1
+out2	in2
+out3	in1
+out3	in2
+out3	in3
+''')
+
+        self.assertEqual(run(plan, flags='-t multi-inputs -F: out1'),
+'''out1:in1
+''')
+
+        self.assertEqual(
+          run(
+            plan,
+            flags='-t multi-inputs -F, --print0 out1 out2'
+          ),
+          f'''out1,in1\0out2,in1\0out2,in2\0'''
+        )
+
     def test_explain_output(self):
         b = BuildDir('''\
             build .FORCE: phony
